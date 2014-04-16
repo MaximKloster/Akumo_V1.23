@@ -26,6 +26,7 @@ public class MissleControllerScript : MonoBehaviour
     {
         // Destroy object after time when created
         Destroy(gameObject, destroyMissleTime);
+
     }
 
     void OnCollisionEnter(Collision colliderObject)

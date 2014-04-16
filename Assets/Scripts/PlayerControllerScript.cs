@@ -41,7 +41,7 @@ public class PlayerControllerScript : MonoBehaviour
     public int maxMissleCount = 3;
     [Range(0, 1)]
     public float startRushTime = 0.2f, maxRushTime = 0.5f, maxSlideTime = 0.5f, maxAttackTime = 0.2f,
-                 maxTouchBufferTime = 0.3f, maxGroundedBufferTime = 0.1f;
+                 maxTouchBufferTime = 0.3f, maxGroundedBufferTime = 0.1f, shootDelayTime = 0.1f;
     public GameObject characterMesh;
     public AudioClip runSound, jumpSound, rushDownSound, landSound, startSlideSound, slideSound, closeCombatSound, throwSound,
                      hittedSound, collectSound;
@@ -300,6 +300,7 @@ public class PlayerControllerScript : MonoBehaviour
         SetCurrentMissleCount(1);
         SetSoundPhase(SoundPhase.Collect);
     }
+
 
     void SetCurrentMissleCount(int changeCount)
     {
@@ -632,7 +633,7 @@ public class PlayerControllerScript : MonoBehaviour
                 if (Play && currentMissleCount > 0)
                 {
                     // Remove missle
-                    SetCurrentMissleCount(-1);
+                    //SetCurrentMissleCount(-1);
 
                     // Create new missle at missle start position and shoot
                     Rigidbody missleInstance;
