@@ -3,7 +3,7 @@ using System.Collections;
 
 public enum ButtonSetting
 {
-    noSettingButton,
+    //noSettingButton,
     startLevelButton,
     nextLevelButton,
     restartLevelButton,
@@ -17,25 +17,25 @@ public enum ButtonSetting
     exitButton
 }
 
-public enum ButtonHandling
+/*public enum ButtonHandling
 {
     NoHandlingButton,
     JumpButton,
     SlideButton,
     ShootButton
-}
+}*/
 
 public class GUIButtonScript : MonoBehaviour
 {
-    public ButtonSetting buttonSetting = ButtonSetting.noSettingButton;
-    public ButtonHandling buttonHandling = ButtonHandling.NoHandlingButton;
+    public ButtonSetting buttonSetting = ButtonSetting.nextLevelButton;
+    //public ButtonHandling buttonHandling = ButtonHandling.NoHandlingButton;
     public int level = 1;
     [Range(1, 100)]
     public float xDistance = 5, yDistance = 5;
     [Range(0.01f, 50)]
     public float size = 1;
-    public Texture2D texture;
-    private float screenSize, xCoord, yCoord, xSize, ySize;
+    public Texture2D mainTexture, activatedTexture = null;
+    private float screenFactorX, screenFactorY, xCoord, yCoord, xSize, ySize;
 
     PlayerControllerScript playerController;
     bool mouseDown;
@@ -48,64 +48,58 @@ public class GUIButtonScript : MonoBehaviour
         //    playerController = GameObject.FindGameObjectWithTag("PlayerObject").GetComponent<PlayerControllerScript>();
         //#endregion
 
-        screenSize = Mathf.Sqrt(Screen.width * Screen.width + Screen.height * Screen.height) / 100;
-        //Debug.Log("MenuButton ScreenSize: " +screenSize);
-        xSize = texture.width / 10 * screenSize * size;
-        //Debug.Log("MenuButton xSize: " +xSize);
-        ySize = texture.height / 10 * screenSize * size;
-        //Debug.Log("MenuButton ySize: " +ySize);
-        xCoord = xDistance * screenSize;
-        //Debug.Log("MenuButton xCoord: " +xCoord);
-        yCoord = yDistance * screenSize;
-        //Debug.Log("MenuButton yCoord: " +yCoord);
+        screenFactorX = Screen.width / 100;
+        screenFactorY = Screen.height / 100;
+        xSize = mainTexture.width / 10 * screenFactorX * size;
+        ySize = mainTexture.height / 10 * screenFactorY * size;
+        xCoord = xDistance * screenFactorX;
+        yCoord = yDistance * screenFactorY;
     }
 
     void Update()
     {
-        screenSize = Mathf.Sqrt(Screen.width * Screen.width + Screen.height * Screen.height) / 100;
-        xSize = texture.width / 10 * screenSize * size;
-        ySize = texture.height / 10 * screenSize * size;
-        xCoord = xDistance * screenSize;
-        yCoord = yDistance * screenSize;
+        screenFactorX = Screen.width / 100;
+        screenFactorY = Screen.height / 100;
+        xSize = mainTexture.width / 10 * screenFactorX * size;
+        ySize = mainTexture.height / 10 * screenFactorY * size;
+        xCoord = xDistance * screenFactorX;
+        yCoord = yDistance * screenFactorY;
     }
 
     private void OnGUI()
     {
-        #region Setting button
-        if (buttonSetting != ButtonSetting.noSettingButton)
-            if (texture != null && GUI.Button(new Rect(xCoord, yCoord, xSize , ySize ), texture, GUIStyle.none))
-                switch (buttonSetting)
-                {
-                    case ButtonSetting.exitButton:
-                        Application.Quit();
-                        break;
-                    case ButtonSetting.menuButton:
-                        LoadingScript.loadingScreenOn = true;
-                        PlayerPrefs.SetString("Load_Level", "MainMenu");
-                        break;
-                    case ButtonSetting.infinitLevelButton:
-                        LoadingScript.loadingScreenOn = true;
-                        PlayerPrefs.SetString("Load_Level", "Level_Infinit");
-                        break;
-                    case ButtonSetting.changeInputButton:
-                        if (PlayerPrefs.GetInt("Handle_Buttons") == 0)
-                            PlayerPrefs.SetInt("Handle_Buttons", 1);
-                        else
-                            PlayerPrefs.SetInt("Handle_Buttons", 0);
-                        break;
-                    case ButtonSetting.soundButton:
-                        if (PlayerPrefs.GetInt("Sound_Buttons") == 0)
-                            PlayerPrefs.SetInt("Sound_Buttons", 1);
-                        else
-                            PlayerPrefs.SetInt("Sound_Buttons", 0);
-                        break;
-                    case ButtonSetting.startLevelButton:
-                    default:
-                        LoadingScript.loadingScreenOn = true;
-                        PlayerPrefs.SetString("Load_Level", "Level_" + level);
-                        break;
-                }
-        #endregion
+        if (mainTexture != null && GUI.Button(new Rect(xCoord, yCoord, xSize, ySize), mainTexture, GUIStyle.none))
+            switch (buttonSetting)
+            {
+                case ButtonSetting.exitButton:
+                    Application.Quit();
+                    break;
+                case ButtonSetting.menuButton:
+                    LoadingScript.loadingScreenOn = true;
+                    PlayerPrefs.SetString("Load_Level", "MainMenu");
+                    break;
+                case ButtonSetting.infinitLevelButton:
+                    LoadingScript.loadingScreenOn = true;
+                    PlayerPrefs.SetString("Load_Level", "Level_Infinit");
+                    break;
+                case ButtonSetting.changeInputButton:
+                    if (PlayerPrefs.GetInt("Handle_Buttons") == 0)
+                        PlayerPrefs.SetInt("Handle_Buttons", 1);
+                    else
+                        PlayerPrefs.SetInt("Handle_Buttons", 0);
+                    break;
+                case ButtonSetting.soundButton:
+                    if (PlayerPrefs.GetInt("Sound_Buttons") == 0)
+                        PlayerPrefs.SetInt("Sound_Buttons", 1);
+                    else
+                        PlayerPrefs.SetInt("Sound_Buttons", 0);
+                    break;
+                case ButtonSetting.startLevelButton:
+                default:
+                    LoadingScript.loadingScreenOn = true;
+                    PlayerPrefs.SetString("Load_Level", "Level_" + level);
+                    break;
+            }
 
         //if (buttonHandling != ButtonHandling.NoHandlingButton)
         //    if (GUI.RepeatButton(new Rect(xCoord, yCoord, xSize, ySize), texture, GUIStyle.none))
